@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
@@ -83,60 +84,68 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile dropdown menu */}
-      <div
-        className={`lg:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-          isOpen ? "max-h-[28rem]" : "max-h-0"
-        }`}
-      >
-        <div className="flex flex-col gap-1 border-t border-border dark:border-border-dark bg-bg dark:bg-bg-dark px-4 py-4">
-          <a
-            href="#features"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+      {/* Mobile dropdown menu — animated with Framer Motion so it doesn't rely on
+          a Tailwind arbitrary-value class (max-h-[28rem]) being present in the build */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="lg:hidden overflow-hidden"
           >
-            Features
-          </a>
-          <a
-            href="#how-it-works"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
-          >
-            How it works
-          </a>
-          <Link
-            href="/about"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
-          >
-            About
-          </Link>
+            <div className="flex flex-col gap-1 border-t border-border dark:border-border-dark bg-bg dark:bg-bg-dark px-4 py-4">
+              <a
+                href="#features"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+              >
+                How it works
+              </a>
+              <Link
+                href="/about"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+              >
+                About
+              </Link>
 
-          <div className="my-2 h-px w-full bg-border dark:bg-border-dark" />
+              <div className="my-2 h-px w-full bg-border dark:bg-border-dark" />
 
-          <Link
-            href="/staff/login"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
-          >
-            Staff login
-          </Link>
-          <Link
-            href="/login"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/login?tab=signup"
-            onClick={() => setIsOpen(false)}
-            className="font-body text-sm font-medium text-center px-4 py-2 mt-1 rounded-lg bg-primary dark:bg-primary-dark text-white hover:bg-primary-hover dark:hover:bg-primary-dark-hover transition-colors"
-          >
-            Sign up
-          </Link>
-        </div>
-      </div>
+              <Link
+                href="/staff/login"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+              >
+                Staff login
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/login?tab=signup"
+                onClick={() => setIsOpen(false)}
+                className="font-body text-sm font-medium text-center px-4 py-2 mt-1 rounded-lg bg-primary dark:bg-primary-dark text-white hover:bg-primary-hover dark:hover:bg-primary-dark-hover transition-colors"
+              >
+                Sign up
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
