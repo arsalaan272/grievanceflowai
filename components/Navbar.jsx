@@ -9,8 +9,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border dark:border-border-dark bg-bg/80 dark:bg-bg-dark/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-border dark:border-border-dark bg-bg/80 dark:bg-bg-dark/80 backdrop-blur-md ">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4 ">
         {/* Logo - always visible, never pushed out */}
         <Link
           href="/"

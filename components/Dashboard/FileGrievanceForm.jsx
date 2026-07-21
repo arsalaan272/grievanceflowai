@@ -106,7 +106,7 @@ export default function FileGrievanceForm({
       transition={{ duration: 0.25 }}
       className="max-w-xl mx-auto"
     >
-      <div className="rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B] p-6 sm:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.45)] transition-colors">
+      <div className="rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B] px-4 py-6 sm:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.45)] transition-colors">
         <div className="flex items-center justify-between border-b border-border dark:border-border-dark pb-5 mb-6">
           <div>
             <h3 className="font-heading font-bold text-xl">File a College Grievance</h3>
@@ -160,7 +160,7 @@ export default function FileGrievanceForm({
               transition={{ duration: 0.2 }}
               className="space-y-4"
             >
-              <div className="rounded-2xl border border-primary/20 dark:border-secondary/30 bg-primary/5 dark:bg-secondary/10 p-5">
+              <div className="rounded-2xl border border-primary/20 dark:border-secondary/30 bg-primary/5 dark:bg-secondary/10 px-3.5 py-5 sm:p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="h-7 w-7 rounded-full bg-primary dark:bg-secondary flex items-center justify-center shrink-0">
                     <Sparkles className="h-3.5 w-3.5 text-white" />
@@ -177,9 +177,9 @@ export default function FileGrievanceForm({
                   value={rawText}
                   onChange={(e) => setRawText(e.target.value)}
                   placeholder="e.g. urgent need for water in the hostel"
-                  rows={3}
+                  rows={5}
                   disabled={isPolishing}
-                  className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50 leading-relaxed disabled:opacity-60"
+                  className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-3 sm:px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50 leading-relaxed disabled:opacity-60"
                 />
                 <p className="text-[10px] text-text-secondary dark:text-text-secondary-dark mt-1.5 leading-normal">
                   A rough line is enough — title, description, category, and priority will be filled in automatically.
@@ -196,7 +196,7 @@ export default function FileGrievanceForm({
                   type="button"
                   onClick={runPolish}
                   disabled={isPolishing}
-                  className="w-full mt-4 bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white py-3 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full mt-4 bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isPolishing ? (
                     <>
@@ -215,7 +215,7 @@ export default function FileGrievanceForm({
               <button
                 type="button"
                 onClick={handleFillManually}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark underline cursor-pointer py-1"
+                className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark underline cursor-pointer py-2"
               >
                 <PenLine className="h-3.5 w-3.5" />
                 Fill manually instead
@@ -246,7 +246,7 @@ export default function FileGrievanceForm({
                 </div>
               )}
 
-              <form onSubmit={handleFileSubmit} className="space-y-4">
+              <form onSubmit={handleFileSubmit} className="space-y-5">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-text-secondary-dark mb-1.5">
                     Title of Complaint
@@ -258,7 +258,7 @@ export default function FileGrievanceForm({
                     onChange={(e) => setNewGrievance({ ...newGrievance, title: e.target.value })}
                     placeholder="e.g. Broken Library AC or Double Exam Fee Charge"
                     required
-                    className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50"
+                    className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-3 sm:px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50"
                   />
                 </div>
 
@@ -272,8 +272,8 @@ export default function FileGrievanceForm({
                     onChange={(e) => setNewGrievance({ ...newGrievance, description: e.target.value })}
                     placeholder="Explain the issues in detail. Mention room numbers, transaction hashes, dates, and names where applicable."
                     required
-                    rows={5}
-                    className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50 leading-relaxed"
+                    rows={7}
+                    className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-3 sm:px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 dark:focus:ring-secondary/40 transition-all placeholder:text-text-secondary/50 leading-relaxed"
                   />
                 </div>
 
@@ -286,7 +286,7 @@ export default function FileGrievanceForm({
                       name="category"
                       value={newGrievance.category}
                       onChange={(e) => setNewGrievance({ ...newGrievance, category: e.target.value })}
-                      className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-3 py-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-transparent transition-all"
+                      className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-2.5 sm:px-3 py-3 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-transparent transition-all"
                     >
                       {CATEGORIES.map((c) => (
                         <option key={c} value={c}>{c}</option>
@@ -302,7 +302,7 @@ export default function FileGrievanceForm({
                       name="priority"
                       value={newGrievance.priority}
                       onChange={(e) => setNewGrievance({ ...newGrievance, priority: e.target.value })}
-                      className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-3 py-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-transparent transition-all"
+                      className="w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark rounded-xl px-2.5 sm:px-3 py-3 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-transparent transition-all"
                     >
                       <option value="Low">Low (Convenience/Minor)</option>
                       <option value="Medium">Medium (Operational/Normal)</option>
@@ -334,7 +334,7 @@ export default function FileGrievanceForm({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white py-3 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 mt-4 cursor-pointer"
+                  className="w-full bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 mt-4 cursor-pointer"
                 >
                   {isSubmitting ? 'Registering Complaint...' : 'Register Complaint'}
                 </button>
@@ -343,7 +343,7 @@ export default function FileGrievanceForm({
                   <button
                     type="button"
                     onClick={() => setMode('generate')}
-                    className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark underline cursor-pointer py-1"
+                    className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark underline cursor-pointer py-2"
                   >
                     <Sparkles className="h-3.5 w-3.5" />
                     Generate with AI instead
