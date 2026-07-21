@@ -71,7 +71,7 @@ export default function page() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-xl border border-border dark:border-border-dark bg-white dark:bg-slate-900"
+          className="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-xl border border-border dark:border-border-dark bg-whit e dark:bg-slate-900/40"
         >
           <div>
             <motion.div
