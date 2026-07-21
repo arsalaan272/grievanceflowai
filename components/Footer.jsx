@@ -2,6 +2,7 @@ const team = [
   { name: "A. Sairab", role: "Backend" },
   { name: "A. Shiva", role: "Frontend" },
   { name: "A. Sadvika", role: "Design" },
+  { name: "A. Raghu", role: "Colorization" },
 ];
 
 export default function Footer() {
