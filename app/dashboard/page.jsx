@@ -46,6 +46,8 @@ export default function dashboard() {
   const [fileSuccess, setFileSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
   // States for timeline tracking
   const [selectedTrackerId, setSelectedTrackerId] = useState('');
   const [studentDetails, setStudentDetails] = useState(null);
@@ -322,12 +324,14 @@ export default function dashboard() {
         setActiveTab={setActiveTab}
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
+        isMobileOpen={isMobileSidebarOpen}
+        setIsMobileOpen={setIsMobileSidebarOpen}
       />
 
       {/* Main Layout Container - dynamically shifts based on sidebar expansion */}
       <div
-        className="transition-all duration-300 ease-out min-h-screen flex flex-col"
-        style={{ paddingLeft: isCollapsed ? '76px' : '280px' }}
+        className={`transition-all duration-300 ease-out min-h-screen flex flex-col pl-0 ${isCollapsed ? 'lg:pl-[76px]' : 'lg:pl-[280px]'
+          }`}
       >
 
         {/* Top Navbar Header */}
@@ -336,7 +340,9 @@ export default function dashboard() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="h-16 border-b border-border dark:border-border-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-md px-6 py-3 flex items-center justify-between sticky top-0 z-30 transition-colors"
+          // after
+          // after
+          className="h-16 border-b border-border dark:border-border-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-md pl-16 pr-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-30 transition-colors"
         >
           <div className="flex items-center gap-3">
             <AnimatePresence mode="wait">
@@ -607,10 +613,10 @@ export default function dashboard() {
                         </div>
                       </div>
                     </motion.div>
-                      
-                      {/* adding the bar grpah*/}
-                      <CategoryBarChart />
-                   
+
+                    {/* adding the bar grpah*/}
+                    <CategoryBarChart />
+
                   </div>
 
                 </div>
@@ -658,7 +664,7 @@ export default function dashboard() {
                 filteredHistoryGrievances={filteredHistoryGrievances}
                 getStatusBadge={getStatusBadge}
                 getPriorityBadge={getPriorityBadge}
-               selectTrackerForGrievance={selectTrackerForGrievance}
+                selectTrackerForGrievance={selectTrackerForGrievance}
                 openDetails={openDetails}
               />
             )}
@@ -680,7 +686,7 @@ export default function dashboard() {
         </main>
       </div>
 
-        {/* Complaint Details Modal */}
+      {/* Complaint Details Modal */}
       <ComplaintDetailsModal
         grievance={detailsGrievance}
         student={studentDetails}
@@ -690,25 +696,27 @@ export default function dashboard() {
       />
 
       {/* Floating Fast Action Submit Button - bottom right */}
-      {activeTab !== 'file' && (
-        <motion.button
-          id="portal-floating-action"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0, opacity: 0 }}
-          whileHover={{ scale: 1.08, y: -2 }}
-          whileTap={{ scale: 0.92 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-          onClick={() => setActiveTab('file')}
-          className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full px-5 py-3 shadow-xl bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white transition-colors duration-200 cursor-pointer border border-white/10"
-        >
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
-            <Plus className="h-3.5 w-3.5 text-white" />
-          </span>
-          <span className="font-semibold text-xs uppercase tracking-wider">New Complaint</span>
-        </motion.button>
-      )}
+      {
+        activeTab !== 'file' && !isMobileSidebarOpen && (
+          <motion.button
+            id="portal-floating-action"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.08, y: -2 }}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+            onClick={() => setActiveTab('file')}
+            className="fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-full px-5 py-3 shadow-xl bg-primary hover:bg-primary-hover dark:bg-secondary dark:hover:bg-secondary-hover text-white transition-colors duration-200 cursor-pointer border border-white/10"
+          >
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
+              <Plus className="h-3.5 w-3.5 text-white" />
+            </span>
+            <span className="font-semibold text-xs uppercase tracking-wider">New Complaint</span>
+          </motion.button>
+        )
+      }
 
-    </div>
+    </div >
   );
 }

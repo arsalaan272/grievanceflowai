@@ -11,10 +11,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 export const metadata = {
   title: "MCA Grievance-Portal",
   description: "MCA Grievance-Portal is a central system for all of the college related and hostel related complaints where studetns can signup/login and file their complaints and the resolvers can see the complaint change their status as they are proceeding in resolving the complaint.",
+   viewport: 'width=device-width, initial-scale=1',
 };
+
 
 export default function RootLayout({ children }) {
   return (
