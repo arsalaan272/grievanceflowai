@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import {
+  Menu,
+  X,
+  Sparkles,
+  Workflow,
+  Info,
+  ShieldCheck,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ThemeToggle from "./ThemeToggle";
 
@@ -100,22 +109,25 @@ export default function Navbar() {
               <a
                 href="#features"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <Sparkles size={18} className="shrink-0" />
                 Features
               </a>
               <a
                 href="#how-it-works"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <Workflow size={18} className="shrink-0" />
                 How it works
               </a>
               <Link
                 href="/about"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <Info size={18} className="shrink-0" />
                 About
               </Link>
 
@@ -124,22 +136,25 @@ export default function Navbar() {
               <Link
                 href="/staff/login"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <ShieldCheck size={18} className="shrink-0" />
                 Staff login
               </Link>
               <Link
                 href="/login"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <LogIn size={18} className="shrink-0" />
                 Log in
               </Link>
               <Link
                 href="/login?tab=signup"
                 onClick={() => setIsOpen(false)}
-                className="font-body text-sm font-medium text-center px-4 py-2 mt-1 rounded-lg bg-primary dark:bg-primary-dark text-white hover:bg-primary-hover dark:hover:bg-primary-dark-hover transition-colors"
+                className="flex items-center gap-3 font-body text-sm font-medium text-text-primary dark:text-text-primary-dark px-2 py-2 mt-1 rounded-lg hover:bg-surface dark:hover:bg-surface-dark transition-colors"
               >
+                <UserPlus size={18} className="shrink-0" />
                 Sign up
               </Link>
             </div>
