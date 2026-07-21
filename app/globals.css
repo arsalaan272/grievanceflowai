@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/* Make `dark:` respond to a .dark class on <html>, not just OS preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Backgrounds & surfaces */
+  --color-bg: #FAFAFA;
+  --color-bg-dark: #050505;
+  --color-surface: #FFFFFF;
+  --color-surface-dark: #0F0F12;
+
+  /* Primary */
+  --color-primary: #0891B2;
+  --color-primary-hover: #0E7490;
+  --color-primary-dark: #06048E;
+  --color-primary-dark-hover: #1210B3;
+
+  /* Secondary */
+  --color-secondary: #4C5FD5;
+  --color-secondary-hover: #3B4BB0;
+  --color-secondary-tint: #EEF0FC;
+  --color-secondary-dark: #8B93F8;
+  --color-secondary-dark-hover: #A5ACFA;
+
+  /* Accent */
+  --color-accent: #9A2FE6;
+  --color-accent-hover: #7E22CE;
+  --color-accent-dark: #6F0A88;
+  --color-accent-dark-hover: #8A14A6;
+
+  /* Text */
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5B6470;
+  --color-text-primary-dark: #E6EDF3;
+  --color-text-secondary-dark: #8B949E;
+
+  /* Borders */
+  --color-border: #E4E7EB;
+  --color-border-dark: #30363D;
+
+  /* Status */
+  --color-success: #16A34A;
+  --color-success-dark: #34D399;
+  --color-warning: #D97706;
+  --color-warning-dark: #FBBF24;
+  --color-danger: #DC2626;
+  --color-danger-dark: #F87171;
+
+  /* Fonts */
+  --font-body: var(--font-body-family), serif;
+  --font-heading: var(--font-heading-family), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-bg dark:bg-bg-dark text-text-primary dark:text-text-primary-dark font-body;
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+* {
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.4s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading;
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark input:focus-visible,
+.dark textarea:focus-visible {
+  outline-color: var(--color-primary-dark-hover);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Signature thread animation for hero status visual */
+@keyframes thread-flow {
+  0% { stroke-dashoffset: 240; }
+  100% { stroke-dashoffset: 0; }
+}
+.thread-path {
+  stroke-dasharray: 240;
+  animation: thread-flow 2.4s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .thread-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-node {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
+.pulse-node {
+  animation: pulse-node 2s ease-in-out infinite;
+}
