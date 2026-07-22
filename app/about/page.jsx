@@ -69,9 +69,9 @@ const lecturers = [
       "A supportive mentor who believes in nurturing curiosity and confidence in every student she teaches.",
   },
   {
-    name: "Sukeerthi Mam",
+    name: "Sukanya Mam",
     dept: "CSE Department",
-    img: "/about/lecturers/sukeerthi.jpg",
+    img: "/about/lecturers/sukanya.jpg",
     about:
       "Focuses on practical, project-based learning, encouraging students to build and experiment beyond the syllabus.",
   },

@@ -460,7 +460,7 @@ export default function dashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.35, delay: idx * 0.08, ease: 'easeOut' }}
                         whileHover={{ y: -6, scale: 1.02 }}
-                        className={`group relative rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B] p-5 overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.08)] transition-shadow duration-300 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]`}
+                        className={`group relative rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#080108]/50 p-5 overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.08)] transition-shadow duration-300 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)]`}
                       >
                         <div className="flex items-start justify-between">
                           <div>
@@ -489,7 +489,7 @@ export default function dashboard() {
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' }}
-                    className="lg:col-span-2 rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B] p-6 space-y-4"
+                    className="lg:col-span-2 rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#080108]/50 p-6 space-y-4"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -572,7 +572,7 @@ export default function dashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
                       whileHover={{ y: -3 }}
-                      className="rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B] p-6 transition-shadow duration-300 hover:shadow-lg"
+                      className="rounded-3xl border border-border dark:border-white/10 bg-surface dark:bg-[#16161B]/20 p-6 transition-shadow duration-300 hover:shadow-lg"
                     >
                       <h4 className="font-heading font-bold text-base">Category Distribution</h4>
                       <p className="text-xs text-text-secondary dark:text-text-secondary-dark mt-0.5">Overview of complaints by division.</p>
@@ -715,7 +715,7 @@ export default function dashboard() {
             <span className="font-semibold text-xs uppercase tracking-wider">New Complaint</span>
           </motion.button>
         )
-      }
+      } 
 
     </div >
   );

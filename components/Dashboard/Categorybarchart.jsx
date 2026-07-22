@@ -17,7 +17,7 @@ export default function MiniGrievanceGraph() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="mt-6 p-4 rounded-xl bg-surface dark:bg-surface-dark border border-border dark:border-border-dark w-full max-w-sm mx-auto shadow-sm"
+      className="mt-6 p-4 rounded-xl bg-surface dark:bg-surface-dark/20 border border-border dark:border-border-dark w-full max-w-sm mx-auto shadow-sm"
     >
       <div className="flex items-end justify-between gap-1 sm:gap-2 h-32 w-full">
         {data.map((cat, idx) => (

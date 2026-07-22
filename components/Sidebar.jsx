@@ -64,7 +64,7 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
         initial={{ width: isCollapsed ? 76 : 280 }}
         animate={{ width: isCollapsed ? 76 : 280 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="hidden lg:flex fixed top-0 bottom-0 left-0 z-40 flex-col border-r border-border dark:border-border-dark bg-surface dark:bg-surface-dark transition-colors duration-200 overflow-hidden"
+        className="hidden lg:flex fixed top-0 bottom-0 left-0 z-40 flex-col border-r border-border dark:border-border-dark bg-surface dark:bg-surface-dark/20 transition-colors duration-200 overflow-hidden"
       >
         {/* Brand Header */}
         <div className={`h-16 flex items-center border-b border-border dark:border-border-dark ${isCollapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>

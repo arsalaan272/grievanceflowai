@@ -165,24 +165,24 @@ function AuthPageContent() {
   return (
     <div className="min-h-screen bg-bg dark:bg-bg-dark transition-colors">
       {/* Header */}
-      <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shrink-0">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-body text-lg font-bold tracking-tight">
-                Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
-              </span>
-              <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
-                Grievance Portal
-              </span>
-            </div>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </header>
+        <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
+          <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shrink-0">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="font-body text-lg font-bold tracking-tight">
+                  Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
+                </span>
+                <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
+                  Grievance Portal
+                </span>
+              </div>
+            </Link>
+            <ThemeToggle />
+          </div>
+        </header>
 
       {/* Main Content — two-column split on large screens */}
       <div className="mx-auto max-w-7xl px-6 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-80px)]">
