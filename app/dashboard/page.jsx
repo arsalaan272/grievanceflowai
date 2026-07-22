@@ -151,6 +151,8 @@ export default function dashboard() {
 
     if (!studentId) return;
 
+
+    console.log("JSON =", JSON.stringify(process.env.NEXT_PUBLIC_API_URL));
     const socket = io(process.env.NEXT_PUBLIC_API_URL);
 
     socket.emit('joinStudentRoom', studentId);
@@ -177,7 +179,7 @@ export default function dashboard() {
         });
       }
     });
-
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     return () => {
       socket.disconnect();
     };
