@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   LogOut
 } from 'lucide-react';
+import { io } from 'socket.io-client';
 import { motion, AnimatePresence } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
@@ -84,6 +85,7 @@ export default function dashboard() {
       }
     }
 
+
     const loadData = async () => {
       setLoading(true);
       setError('');
@@ -113,6 +115,39 @@ export default function dashboard() {
 
     loadData();
   }, [router]);
+
+
+  // Real-time socket connection for live status updates
+  useEffect(() => {
+    const storedStudent = localStorage.getItem('student');
+    if (!storedStudent) return;
+
+    let studentId;
+    try {
+      const parsed = JSON.parse(storedStudent);
+      studentId = parsed._id || parsed.id;
+    } catch (e) {
+      return;
+    }
+
+    if (!studentId) return;
+
+    const socket = io(process.env.NEXT_PUBLIC_API_URL);
+
+    socket.emit('joinStudentRoom', studentId);
+
+    socket.on('complaintStatusUpdated', (updatedGrievance) => {
+      setGrievances(prev =>
+        prev.map(g => g._id === updatedGrievance._id ? updatedGrievance : g)
+      );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -715,7 +750,7 @@ export default function dashboard() {
             <span className="font-semibold text-xs uppercase tracking-wider">New Complaint</span>
           </motion.button>
         )
-      } 
+      }
 
     </div >
   );
