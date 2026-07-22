@@ -5,6 +5,7 @@ import {
   GitBranch,
   History,
   MessageSquareShare,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
   GraduationCap,
@@ -49,7 +50,15 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
       icon: MessageSquareShare,
       description: 'Public complaints & discussions'
     },
+    {
+      id: 'resolved',
+      label: 'Resolved Complaints',
+      shortLabel: 'Resolved',
+      icon: CheckCircle,
+      description: 'Closed and certified complaints'
+    },
   ];
+
 
   const selectTab = (id) => {
     setActiveTab(id);
@@ -111,11 +120,10 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`group relative w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? 'bg-primary/10 dark:bg-primary-dark/20 text-primary dark:text-text-primary-dark font-semibold'
-                    : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark hover:bg-bg dark:hover:bg-bg-dark'
-                }`}
+                className={`group relative w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer ${isActive
+                  ? 'bg-primary/10 dark:bg-primary-dark/20 text-primary dark:text-text-primary-dark font-semibold'
+                  : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark hover:bg-bg dark:hover:bg-bg-dark'
+                  }`}
               >
                 {isActive && !isCollapsed && (
                   <motion.div
@@ -125,9 +133,8 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
                   />
                 )}
 
-                <IconComponent className={`h-5 w-5 shrink-0 transition-transform group-hover:scale-110 ${
-                  isActive ? 'text-primary dark:text-secondary-dark' : 'text-text-secondary dark:text-text-secondary-dark'
-                }`} />
+                <IconComponent className={`h-5 w-5 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-primary dark:text-secondary-dark' : 'text-text-secondary dark:text-text-secondary-dark'
+                  }`} />
 
                 {!isCollapsed && (
                   <motion.div
@@ -237,15 +244,13 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
                     <button
                       key={item.id}
                       onClick={() => selectTab(item.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-colors duration-150 ${
-                        isActive
-                          ? 'bg-primary/10 dark:bg-primary-dark/20 text-primary dark:text-text-primary-dark font-semibold'
-                          : 'text-text-secondary dark:text-text-secondary-dark hover:bg-bg dark:hover:bg-bg-dark'
-                      }`}
+                      className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-colors duration-150 ${isActive
+                        ? 'bg-primary/10 dark:bg-primary-dark/20 text-primary dark:text-text-primary-dark font-semibold'
+                        : 'text-text-secondary dark:text-text-secondary-dark hover:bg-bg dark:hover:bg-bg-dark'
+                        }`}
                     >
-                      <IconComponent className={`h-5 w-5 shrink-0 ${
-                        isActive ? 'text-primary dark:text-secondary-dark' : 'text-text-secondary dark:text-text-secondary-dark'
-                      }`} />
+                      <IconComponent className={`h-5 w-5 shrink-0 ${isActive ? 'text-primary dark:text-secondary-dark' : 'text-text-secondary dark:text-text-secondary-dark'
+                        }`} />
                       <span className="flex flex-col">
                         <span className="text-sm font-semibold">{item.label}</span>
                         <span className="text-xs text-text-secondary/70 dark:text-text-secondary-dark/60 font-normal">

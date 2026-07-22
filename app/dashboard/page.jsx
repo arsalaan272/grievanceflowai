@@ -25,6 +25,7 @@ import GrievanceHistory from '@/components/Dashboard/GrievanceHistory';
 import ComplaintDetailsModal from '@/components/Dashboard/ComplaintDetailsModal';
 import CommunityFeed from '@/components/Dashboard/CommunityFeed';
 import CategoryBarChart from '@/components/Dashboard/Categorybarchart';
+import ResolvedComplaints from '@/components/Dashboard/ResolvedComplaints';
 
 export default function dashboard() {
   const router = useRouter();
@@ -33,6 +34,9 @@ export default function dashboard() {
   const [studentName, setStudentName] = useState('Student');
   const [studentEmail, setStudentEmail] = useState('');
   const [grievances, setGrievances] = useState([]);
+  // Resolved complaints live in a separate list now — the backend's /my
+  // endpoint excludes them, so they no longer show up in `grievances` at all.
+  const [resolvedGrievances, setResolvedGrievances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -60,6 +64,11 @@ export default function dashboard() {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [sortBy, setSortBy] = useState('newest'); // newest, oldest, upvotes
+
+  // States for the Resolved Complaints tab (kept separate from history filters
+  // since it's a much smaller, simpler list)
+  const [resolvedSearchQuery, setResolvedSearchQuery] = useState('');
+  const [resolvedSortBy, setResolvedSortBy] = useState('newest');
 
   // State for Community Feed comment
   const [newCommentText, setNewCommentText] = useState({});
@@ -90,24 +99,34 @@ export default function dashboard() {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grievances/my`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const [activeRes, resolvedRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grievances/my`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grievances/my/resolved`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-        const data = await res.json();
+        const activeData = await activeRes.json();
+        const resolvedData = await resolvedRes.json();
 
-        if (!res.ok) {
-          setError(data.message || 'Unable to load your complaints.');
+        if (!activeRes.ok) {
+          setError(activeData.message || 'Unable to load your complaints.');
           setGrievances([]);
-          return;
+        } else {
+          setGrievances(activeData);
         }
 
-        setGrievances(data);
+        if (resolvedRes.ok) {
+          setResolvedGrievances(resolvedData);
+        } else {
+          setResolvedGrievances([]);
+        }
       } catch (err) {
         setError('Could not connect to the server. Please try again shortly.');
         setGrievances([]);
+        setResolvedGrievances([]);
       } finally {
         setLoading(false);
       }
@@ -136,10 +155,27 @@ export default function dashboard() {
 
     socket.emit('joinStudentRoom', studentId);
 
+    // A status update can mean the complaint needs to MOVE between the two
+    // lists (active <-> resolved), not just be patched in place — e.g. staff
+    // marks it Resolved, or later flips a resolved one back to In Progress.
     socket.on('complaintStatusUpdated', (updatedGrievance) => {
-      setGrievances(prev =>
-        prev.map(g => g._id === updatedGrievance._id ? updatedGrievance : g)
-      );
+      if (updatedGrievance.status === 'Resolved') {
+        setGrievances(prev => prev.filter(g => g._id !== updatedGrievance._id));
+        setResolvedGrievances(prev => {
+          const exists = prev.some(g => g._id === updatedGrievance._id);
+          return exists
+            ? prev.map(g => g._id === updatedGrievance._id ? updatedGrievance : g)
+            : [updatedGrievance, ...prev];
+        });
+      } else {
+        setResolvedGrievances(prev => prev.filter(g => g._id !== updatedGrievance._id));
+        setGrievances(prev => {
+          const exists = prev.some(g => g._id === updatedGrievance._id);
+          return exists
+            ? prev.map(g => g._id === updatedGrievance._id ? updatedGrievance : g)
+            : [updatedGrievance, ...prev];
+        });
+      }
     });
 
     return () => {
@@ -156,10 +192,11 @@ export default function dashboard() {
   };
 
   // Stat counting calculations
-  const totalComplaints = grievances.length;
+  // Total now spans both lists since resolved items live outside `grievances`
+  const totalComplaints = grievances.length + resolvedGrievances.length;
   const pendingCount = grievances.filter(item => item.status === 'Pending').length;
   const inProgressCount = grievances.filter(item => item.status === 'In Progress').length;
-  const resolvedCount = grievances.filter(item => item.status === 'Resolved').length;
+  const resolvedCount = resolvedGrievances.length;
 
   const statCards = [
     {
@@ -282,12 +319,15 @@ export default function dashboard() {
   };
 
   // Timeline tracker selected grievance
+  // Now checks both active and resolved lists, since a resolved complaint
+  // should still be trackable via its timeline.
   const currentTrackerGrievance = useMemo(() => {
+    const combined = [...grievances, ...resolvedGrievances];
     if (selectedTrackerId) {
-      return grievances.find(g => g._id === selectedTrackerId);
+      return combined.find(g => g._id === selectedTrackerId);
     }
-    return grievances[0] || null;
-  }, [selectedTrackerId, grievances]);
+    return grievances[0] || resolvedGrievances[0] || null;
+  }, [selectedTrackerId, grievances, resolvedGrievances]);
 
   // Handle direct tab routing shortcuts
   const selectTrackerForGrievance = (id) => {
@@ -301,6 +341,7 @@ export default function dashboard() {
   };
 
   // Filtered grievances list for "History" search
+  // Resolved items are intentionally absent here — they only live in `grievances` now
   const filteredHistoryGrievances = useMemo(() => {
     return grievances.filter(item => {
       const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -316,6 +357,19 @@ export default function dashboard() {
       return 0;
     });
   }, [grievances, searchQuery, statusFilter, categoryFilter, priorityFilter, sortBy]);
+
+  // Filtered list for the Resolved Complaints tab
+  const filteredResolvedGrievances = useMemo(() => {
+    return resolvedGrievances.filter(item => {
+      const matchSearch = item.title.toLowerCase().includes(resolvedSearchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(resolvedSearchQuery.toLowerCase());
+      return matchSearch;
+    }).sort((a, b) => {
+      if (resolvedSortBy === 'newest') return new Date(b.updatedAt) - new Date(a.updatedAt);
+      if (resolvedSortBy === 'oldest') return new Date(a.updatedAt) - new Date(b.updatedAt);
+      return 0;
+    });
+  }, [resolvedGrievances, resolvedSearchQuery, resolvedSortBy]);
 
   // Feed items list
   const communityGrievances = useMemo(() => {
@@ -375,8 +429,6 @@ export default function dashboard() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          // after
-          // after
           className="h-16 border-b border-border dark:border-border-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-md pl-16 pr-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-30 transition-colors"
         >
           <div className="flex items-center gap-3">
@@ -394,6 +446,7 @@ export default function dashboard() {
                 {activeTab === 'track' && 'Resolution Timeline Tracker'}
                 {activeTab === 'history' && 'Complaint Dossier & History'}
                 {activeTab === 'feed' && 'Student Community Feed'}
+                {activeTab === 'resolved' && 'Resolved Complaints'}
               </motion.h2>
             </AnimatePresence>
           </div>
@@ -674,7 +727,7 @@ export default function dashboard() {
             {/* 3. TRACK STATUS TIMELINE VIEW */}
             {activeTab === 'track' && (
               <TrackGrievance
-                grievances={grievances}
+                grievances={[...grievances, ...resolvedGrievances]}
                 selectedTrackerId={selectedTrackerId}
                 setSelectedTrackerId={setSelectedTrackerId}
                 currentTrackerGrievance={currentTrackerGrievance}
@@ -714,6 +767,22 @@ export default function dashboard() {
                 setNewCommentText={setNewCommentText}
                 handleAddComment={handleAddComment}
                 setActiveTab={setActiveTab}
+              />
+            )}
+
+            {/* 6. RESOLVED COMPLAINTS VIEW */}
+            {activeTab === 'resolved' && (
+              <ResolvedComplaints
+                resolvedSearchQuery={resolvedSearchQuery}
+                setResolvedSearchQuery={setResolvedSearchQuery}
+                resolvedSortBy={resolvedSortBy}
+                setResolvedSortBy={setResolvedSortBy}
+                filteredResolvedGrievances={filteredResolvedGrievances}
+                loading={loading}
+                getStatusBadge={getStatusBadge}
+                getPriorityBadge={getPriorityBadge}
+                selectTrackerForGrievance={selectTrackerForGrievance}
+                openDetails={openDetails}
               />
             )}
 

@@ -17,6 +17,7 @@ import {
   Loader2,
   CheckCircle2,
   UserRound,
+  CheckCheck,
 } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -118,7 +119,7 @@ export default function StaffDashboard() {
     setError('');
     setLoading(true);
     const token = localStorage.getItem('staffToken');
-    const endpoint = tab === 'assigned' ? 'assigned' : 'escalated';
+    const endpoint = tab === 'assigned' ? 'assigned' : tab === 'escalated' ? 'escalated' : 'resolved';
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grievances/${endpoint}`, {
@@ -232,6 +233,7 @@ export default function StaffDashboard() {
   const navItems = [
     { key: 'assigned', label: isHOD ? 'All complaints' : 'Assigned complaints', icon: Inbox },
     { key: 'escalated', label: 'Escalated complaints', icon: AlertTriangle },
+    { key: 'resolved', label: 'Resolved complaints', icon: CheckCheck },
   ];
 
   return (
@@ -260,7 +262,7 @@ export default function StaffDashboard() {
       {/* Sidebar — brand, identity, nav, theme toggle, and logout all live here.
           On mobile/tablet it becomes a full-screen takeover triggered by the hamburger;
           on lg+ screens it's the persistent 64-wide sticky sidebar. */}
-     <AnimatePresence>
+      <AnimatePresence>
         {sidebarOpen && (
           <>
             <motion.div
@@ -280,92 +282,92 @@ export default function StaffDashboard() {
               transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
               className="lg:hidden fixed inset-0 z-50 h-screen w-full bg-surface dark:bg-surface-dark flex flex-col overflow-y-auto"
             >
-            <div className="flex items-center justify-between p-5 border-b border-border dark:border-border-dark">
-              <Link href="/" className="flex items-center gap-3 min-w-0" onClick={() => setSidebarOpen(false)}>
-                <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark text-white shadow-md shrink-0">
-                  <ShieldCheck className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col leading-none min-w-0">
-                  <span className="font-body text-lg font-bold tracking-tight text-text-primary dark:text-text-primary-dark truncate">
-                    Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
-                  </span>
-                  <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
-                    Staff Portal
-                  </span>
-                </div>
-              </Link>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setSidebarOpen(false)}
-                aria-label="Close menu"
-                className="flex items-center justify-center h-9 w-9 rounded-lg text-text-primary dark:text-text-primary-dark hover:bg-danger/10 hover:text-danger dark:hover:bg-danger-dark/10 dark:hover:text-danger-dark transition-colors cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </motion.button>
-            </div>
-
-            {/* Staff identity */}
-            <div className="p-5 border-b border-border dark:border-border-dark">
-              <div className="flex items-center gap-3 min-w-0">
-                <div
-                  className="h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-primary to-accent dark:from-primary-dark dark:to-accent-dark text-white flex items-center justify-center text-sm font-medium shadow-sm"
-                  title={staffInfo.name}
+              <div className="flex items-center justify-between p-5 border-b border-border dark:border-border-dark">
+                <Link href="/" className="flex items-center gap-3 min-w-0" onClick={() => setSidebarOpen(false)}>
+                  <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark text-white shadow-md shrink-0">
+                    <ShieldCheck className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col leading-none min-w-0">
+                    <span className="font-body text-lg font-bold tracking-tight text-text-primary dark:text-text-primary-dark truncate">
+                      Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
+                    </span>
+                    <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
+                      Staff Portal
+                    </span>
+                  </div>
+                </Link>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setSidebarOpen(false)}
+                  aria-label="Close menu"
+                  className="flex items-center justify-center h-9 w-9 rounded-lg text-text-primary dark:text-text-primary-dark hover:bg-danger/10 hover:text-danger dark:hover:bg-danger-dark/10 dark:hover:text-danger-dark transition-colors cursor-pointer"
                 >
-                  {initials}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-text-primary dark:text-text-primary-dark truncate">
-                    {staffInfo.name}
-                  </p>
-                  <p className="text-xs text-text-secondary dark:text-text-secondary-dark truncate">
-                    {staffInfo.role}
-                    {staffInfo.category ? ` · ${staffInfo.category}` : ''}
-                  </p>
+                  <X className="h-5 w-5" />
+                </motion.button>
+              </div>
+
+              {/* Staff identity */}
+              <div className="p-5 border-b border-border dark:border-border-dark">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className="h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-primary to-accent dark:from-primary-dark dark:to-accent-dark text-white flex items-center justify-center text-sm font-medium shadow-sm"
+                    title={staffInfo.name}
+                  >
+                    {initials}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-text-primary dark:text-text-primary-dark truncate">
+                      {staffInfo.name}
+                    </p>
+                    <p className="text-xs text-text-secondary dark:text-text-secondary-dark truncate">
+                      {staffInfo.role}
+                      {staffInfo.category ? ` · ${staffInfo.category}` : ''}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Nav */}
-            <nav className="flex-1 p-3 space-y-1">
-              {navItems.map(({ key, label, icon: Icon }) => (
+              {/* Nav */}
+              <nav className="flex-1 p-3 space-y-1">
+                {navItems.map(({ key, label, icon: Icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => selectTab(key)}
+                    className={`relative w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === key
+                      ? 'text-white'
+                      : 'text-text-secondary dark:text-text-secondary-dark hover:bg-primary/10 dark:hover:bg-primary-dark/10'
+                      }`}
+                  >
+                    {tab === key && (
+                      <motion.span
+                        layoutId="mobile-nav-highlight"
+                        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                        className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark"
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {label}
+                    </span>
+                  </button>
+                ))}
+              </nav>
+
+              {/* Theme toggle + logout */}
+              <div className="p-3 border-t border-border dark:border-border-dark space-y-2">
+                <div className="flex items-center justify-between px-2">
+                  <span className="text-xs font-medium text-text-secondary dark:text-text-secondary-dark">Theme</span>
+                  <ThemeToggle />
+                </div>
                 <button
-                  key={key}
-                  onClick={() => selectTab(key)}
-                  className={`relative w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${tab === key
-                    ? 'text-white'
-                    : 'text-text-secondary dark:text-text-secondary-dark hover:bg-primary/10 dark:hover:bg-primary-dark/10'
-                    }`}
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-1.5 justify-center rounded-xl border border-border dark:border-border-dark bg-surface dark:bg-surface-dark px-3.5 py-2.5 text-xs font-semibold text-text-primary dark:text-text-primary-dark hover:bg-danger/10 hover:text-danger hover:border-danger/30 dark:hover:bg-danger-dark/10 dark:hover:text-danger-dark dark:hover:border-danger-dark/30 transition-all duration-200 cursor-pointer"
                 >
-                  {tab === key && (
-                    <motion.span
-                      layoutId="mobile-nav-highlight"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark"
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </span>
+                  <LogOut className="h-3.5 w-3.5" />
+                  Logout
                 </button>
-              ))}
-            </nav>
-
-            {/* Theme toggle + logout */}
-            <div className="p-3 border-t border-border dark:border-border-dark space-y-2">
-              <div className="flex items-center justify-between px-2">
-                <span className="text-xs font-medium text-text-secondary dark:text-text-secondary-dark">Theme</span>
-                <ThemeToggle />
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-1.5 justify-center rounded-xl border border-border dark:border-border-dark bg-surface dark:bg-surface-dark px-3.5 py-2.5 text-xs font-semibold text-text-primary dark:text-text-primary-dark hover:bg-danger/10 hover:text-danger hover:border-danger/30 dark:hover:bg-danger-dark/10 dark:hover:text-danger-dark dark:hover:border-danger-dark/30 transition-all duration-200 cursor-pointer"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Logout
-              </button>
-            </div>
-          </motion.aside>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>
@@ -467,16 +469,22 @@ export default function StaffDashboard() {
           <h1 className="text-xl sm:text-2xl font-heading font-semibold text-text-primary dark:text-text-primary-dark">
             {tab === 'assigned'
               ? isHOD ? 'All complaints' : 'Assigned complaints'
-              : 'Escalated complaints'}
+              : tab === 'escalated'
+                ? 'Escalated complaints'
+                : 'Resolved complaints'}
           </h1>
           <p className="text-sm text-text-secondary dark:text-text-secondary-dark mt-1">
             {tab === 'assigned'
               ? isHOD
                 ? 'Every open complaint across categories.'
                 : `Complaints filed under ${staffInfo.category || 'your'} category.`
-              : isHOD
-                ? 'Complaints unresolved for more than three days. You can update their status.'
-                : 'Complaints unresolved for more than three days in your category. Status changes are made by the HOD.'}
+              : tab === 'escalated'
+                ? isHOD
+                  ? 'Complaints unresolved for more than three days. You can update their status.'
+                  : 'Complaints unresolved for more than three days in your category. Status changes are made by the HOD.'
+                : isHOD
+                  ? 'All resolved complaints across categories. You can still reopen one if needed.'
+                  : `Resolved complaints in ${staffInfo.category || 'your'} category.`}
           </p>
         </motion.div>
 
@@ -591,7 +599,9 @@ export default function StaffDashboard() {
                     whileHover={{ y: -4 }}
                     className={`flex flex-col rounded-2xl border border-border dark:border-border-dark p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 border-t-4 ${style.topBorder} ${tab === 'escalated'
                       ? 'bg-danger/5 dark:bg-danger-dark/10'
-                      : 'bg-surface dark:bg-surface-dark'
+                      : tab === 'resolved'
+                        ? 'bg-success/5 dark:bg-success-dark/10'
+                        : 'bg-surface dark:bg-surface-dark'
                       }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-3">
