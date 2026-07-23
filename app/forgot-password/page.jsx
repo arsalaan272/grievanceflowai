@@ -4,31 +4,41 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '@/components/ThemeToggle';
-import {ShieldCheck} from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
-export default function page() {
-  const [email, setEmail] = useState('');
+export default function Page() {
+  const [step, setStep] = useState(1); // 1 = enter username, 2 = answer + new password
+
+  const [username, setUsername] = useState('');
+  const [securityQuestion, setSecurityQuestion] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const isSuccess = message.includes('successful');
+
+  // Step 1: look up the student's security question
+  const handleUsernameSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/students/forgot-password`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/students/forgot-password/question`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Reset link sent! Check your email.');
+        setSecurityQuestion(data.securityQuestion);
+        setStep(2);
       } else {
         setMessage(data.message || 'Something went wrong');
       }
@@ -39,14 +49,53 @@ export default function page() {
     }
   };
 
-  const isSuccess = message.includes('sent');
+  // Step 2: verify DOB + security answer and set the new password
+  const handleResetSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/students/forgot-password/reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          dateOfBirth,
+          securityAnswer,
+          password,
+          confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Password reset successful! You can now log in.');
+      } else {
+        setMessage(data.message || 'Something went wrong');
+      }
+    } catch (error) {
+      setMessage('Error connecting to server');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass =
+    'appearance-none rounded-lg relative block w-full px-4 py-3 border border-border dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent sm:text-sm transition-colors';
 
   return (
     <div className="min-h-screen flex flex-col bg-surface dark:bg-surface-dark text-slate-900 dark:text-white transition-colors duration-300">
 
       {/* Nav bar */}
-      {/* Nav bar */}
-        <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
+      <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shrink-0">
@@ -71,7 +120,7 @@ export default function page() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-xl border border-border dark:border-border-dark bg-whit e dark:bg-slate-900/40"
+          className="max-w-md w-full space-y-8 p-8 rounded-2xl shadow-xl border border-border dark:border-border-dark bg-white dark:bg-slate-900/40"
         >
           <div>
             <motion.div
@@ -93,38 +142,123 @@ export default function page() {
               Forgot Password
             </h2>
             <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
-              No worries, enter your email and we&apos;ll send you a reset link.
+              {step === 1
+                ? 'Enter your email or roll number to get started.'
+                : 'Answer your security question to set a new password.'}
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300"
-              >
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="appearance-none rounded-lg relative block w-full px-4 py-3 border border-border dark:border-border-dark bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent sm:text-sm transition-colors"
-              />
-            </div>
+          {/* STEP 1: enter username */}
+          {step === 1 && (
+            <form className="mt-8 space-y-6" onSubmit={handleUsernameSubmit}>
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  Email or Roll Number
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your email or roll number"
+                  className={inputClass}
+                />
+              </div>
 
-            <motion.button
-              type="submit"
-              disabled={loading}
-              whileTap={{ scale: 0.98 }}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary dark:bg-primary-dark hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-dark transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Sending...' : 'Send Reset Link'}
-            </motion.button>
-          </form>
+              <motion.button
+                type="submit"
+                disabled={loading}
+                whileTap={{ scale: 0.98 }}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary dark:bg-primary-dark hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-dark transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Checking...' : 'Continue'}
+              </motion.button>
+            </form>
+          )}
+
+          {/* STEP 2: verify DOB + security answer, then set new password */}
+          {step === 2 && !isSuccess && (
+            <form className="mt-8 space-y-6" onSubmit={handleResetSubmit}>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  Security Question
+                </label>
+                <p className="px-4 py-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm text-slate-700 dark:text-slate-300">
+                  {securityQuestion}
+                </p>
+              </div>
+
+              <div>
+                <label htmlFor="dateOfBirth" className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  Date of Birth
+                </label>
+                <input
+                  id="dateOfBirth"
+                  type="date"
+                  required
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="securityAnswer" className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  Your Answer
+                </label>
+                <input
+                  id="securityAnswer"
+                  type="text"
+                  required
+                  value={securityAnswer}
+                  onChange={(e) => setSecurityAnswer(e.target.value)}
+                  placeholder="Your answer"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  New Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
+                  Confirm New Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  className={inputClass}
+                />
+              </div>
+
+              <motion.button
+                type="submit"
+                disabled={loading}
+                whileTap={{ scale: 0.98 }}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary dark:bg-primary-dark hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-dark transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Resetting...' : 'Reset Password'}
+              </motion.button>
+            </form>
+          )}
 
           <AnimatePresence>
             {message && (

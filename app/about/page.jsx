@@ -100,7 +100,7 @@ const team = [
       "Co-founder driving the project's mission forward, focused on impact and building something students genuinely need.",
   },
   {
-    name: "Raghu",
+    name: "A. Raghu",
     role: "Designer",
     img: "/about/team/raghu.jpg",
     about:

@@ -19,6 +19,7 @@ import {
   BookOpen,
   CalendarDays,
   ArrowRight,
+  HelpCircle, // add this
 } from 'lucide-react';
 
 function AuthPageContent() {
@@ -39,6 +40,7 @@ function AuthPageContent() {
     password: '',
   });
 
+
   // Signup states
   const [signupData, setSignupData] = useState({
     nameAadhar: '',
@@ -50,6 +52,9 @@ function AuthPageContent() {
     yearOfStudy: '',
     password: '',
     confirmPassword: '',
+    dateOfBirth: '',
+    securityQuestion: '',
+    securityAnswer: '',
   });
 
   const [error, setError] = useState('');
@@ -131,6 +136,9 @@ function AuthPageContent() {
         yearOfStudy: '',
         password: '',
         confirmPassword: '',
+        dateOfBirth: '',
+        securityQuestion: '',
+        securityAnswer: '',
       });
     } catch (err) {
       setError('Something went wrong. Please try again.');
@@ -162,27 +170,35 @@ function AuthPageContent() {
   const inputIconClass = 'absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary dark:text-text-secondary-dark pointer-events-none';
   const inputClass = 'w-full bg-bg dark:bg-bg-dark border border-border dark:border-border-dark text-text-primary dark:text-text-primary-dark rounded-xl pl-10 pr-4 py-2.5 font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 dark:focus:ring-secondary-dark/50 focus:border-transparent transition-all placeholder-text-secondary/60 dark:placeholder-text-secondary-dark/60';
 
+  const SECURITY_QUESTIONS = [
+    "What is your favorite teacher's name?",
+    "What is your favorite book?",
+    "What is the name of your best friend in school?",
+    "What is your favorite subject?",
+    "What is your pet's name?",
+  ];
+
   return (
     <div className="min-h-screen bg-bg dark:bg-bg-dark transition-colors">
       {/* Header */}
-        <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
-          <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shrink-0">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="font-body text-lg font-bold tracking-tight">
-                  Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
-                </span>
-                <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
-                  Grievance Portal
-                </span>
-              </div>
-            </Link>
-            <ThemeToggle />
-          </div>
-        </header>
+      <header className="border-b border-border dark:border-border-dark bg-surface dark:bg-surface-dark">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white shadow-md shrink-0">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="font-body text-lg font-bold tracking-tight">
+                Grievance<span className="text-primary dark:text-secondary-dark">Flow</span>
+              </span>
+              <span className="text-[10px] font-semibold tracking-widest text-text-secondary dark:text-text-secondary-dark uppercase mt-0.5">
+                Grievance Portal
+              </span>
+            </div>
+          </Link>
+          <ThemeToggle />
+        </div>
+      </header>
 
       {/* Main Content — two-column split on large screens */}
       <div className="mx-auto max-w-7xl px-6 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-80px)]">
@@ -270,9 +286,8 @@ function AuthPageContent() {
                   setIsLogin(true);
                   setError('');
                 }}
-                className={`relative z-10 flex-1 font-body font-semibold text-sm py-2.5 rounded-lg transition-colors cursor-pointer ${
-                  isLogin ? 'text-white' : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark'
-                }`}
+                className={`relative z-10 flex-1 font-body font-semibold text-sm py-2.5 rounded-lg transition-colors cursor-pointer ${isLogin ? 'text-white' : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark'
+                  }`}
               >
                 Sign In
               </button>
@@ -281,9 +296,8 @@ function AuthPageContent() {
                   setIsLogin(false);
                   setError('');
                 }}
-                className={`relative z-10 flex-1 font-body font-semibold text-sm py-2.5 rounded-lg transition-colors cursor-pointer ${
-                  !isLogin ? 'text-white' : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark'
-                }`}
+                className={`relative z-10 flex-1 font-body font-semibold text-sm py-2.5 rounded-lg transition-colors cursor-pointer ${!isLogin ? 'text-white' : 'text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark'
+                  }`}
               >
                 Sign Up
               </button>
@@ -540,6 +554,69 @@ function AuthPageContent() {
                             <option value="3">3rd Year</option>
                             <option value="4">4th Year</option>
                           </select>
+                        </div>
+                      </motion.div>
+
+                      {/* Row 4.5 — Date of Birth */}
+                      <motion.div variants={itemVariants}>
+                        <label className="block font-body text-xs font-bold uppercase tracking-wider text-text-secondary dark:text-text-secondary-dark mb-2">
+                          Date of Birth
+                        </label>
+                        <div className={inputWrapClass}>
+                          <CalendarDays className={inputIconClass} />
+                          <input
+                            type="date"
+                            name="dateOfBirth"
+                            value={signupData.dateOfBirth}
+                            onChange={handleSignupChange}
+                            required
+                            max={new Date().toISOString().split('T')[0]}
+                            className={inputClass}
+                          />
+                        </div>
+                        <p className="text-[11px] text-text-secondary dark:text-text-secondary-dark mt-1.5">
+                          Used to verify your identity if you forget your password.
+                        </p>
+                      </motion.div>
+
+                      {/* Row 4.6 — Security Question */}
+                      <motion.div variants={itemVariants}>
+                        <label className="block font-body text-xs font-bold uppercase tracking-wider text-text-secondary dark:text-text-secondary-dark mb-2">
+                          Security Question
+                        </label>
+                        <div className={inputWrapClass}>
+                          <HelpCircle className={inputIconClass} />
+                          <select
+                            name="securityQuestion"
+                            value={signupData.securityQuestion}
+                            onChange={handleSignupChange}
+                            required
+                            className={`${inputClass} appearance-none cursor-pointer`}
+                          >
+                            <option value="">Select a security question</option>
+                            {SECURITY_QUESTIONS.map((q) => (
+                              <option key={q} value={q}>{q}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </motion.div>
+
+                      {/* Row 4.7 — Security Answer */}
+                      <motion.div variants={itemVariants}>
+                        <label className="block font-body text-xs font-bold uppercase tracking-wider text-text-secondary dark:text-text-secondary-dark mb-2">
+                          Your Answer
+                        </label>
+                        <div className={inputWrapClass}>
+                          <User className={inputIconClass} />
+                          <input
+                            type="text"
+                            name="securityAnswer"
+                            value={signupData.securityAnswer}
+                            onChange={handleSignupChange}
+                            required
+                            placeholder="Your answer"
+                            className={inputClass}
+                          />
                         </div>
                       </motion.div>
 
