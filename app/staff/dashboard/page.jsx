@@ -110,9 +110,10 @@ export default function StaffDashboard() {
     };
   }, [sidebarOpen]);
 
-  // Only the HOD can change a complaint's status. Everyone else (wardens,
-  // lecturers, etc.) can view assigned/escalated complaints but the status
-  // control is read-only for them.
+  // The HOD can always change a complaint's status. Wardens, lecturers, and
+  // other staff can also change status on complaints that haven't been
+  // escalated yet. Once a complaint is escalated to the HOD, only the HOD
+  // may act on it.
   const isHOD = staffInfo?.role === 'HOD';
 
   const fetchGrievances = async () => {
@@ -141,7 +142,9 @@ export default function StaffDashboard() {
   };
 
   const updateStatus = async (id, status) => {
-    if (!isHOD) return; // safety net — only HOD may update status
+    // Safety net: non-HOD staff may only update status on complaints that
+    // haven't been escalated yet. Escalated ones are HOD-only.
+    if (!isHOD && tab === 'escalated') return;
     const token = localStorage.getItem('staffToken');
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grievances/${id}/status`, {
@@ -636,7 +639,7 @@ export default function StaffDashboard() {
                         {g.status}
                       </span>
 
-                      {isHOD ? (
+                      {isHOD || tab !== 'escalated' ? (
                         <select
                           value={g.status}
                           onChange={(e) => updateStatus(g._id, e.target.value)}
@@ -646,16 +649,11 @@ export default function StaffDashboard() {
                           <option value="In Progress">In Progress</option>
                           <option value="Resolved">Resolved</option>
                         </select>
-                      ) : tab === 'escalated' ? (
+                      ) : (
                         <span className="inline-flex items-center gap-1 text-[11px] font-medium text-danger dark:text-danger-dark">
                           <AlertTriangle className="h-3 w-3" />
                           Escalated to HOD
                         </span>
-                      ) : (
-                        <span className="text-[11px] text-text-secondary dark:text-text-secondary-dark italic">
-                          HOD only
-                        </span>
-
                       )}
                     </div>
                   </motion.div>
